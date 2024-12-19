@@ -3,6 +3,7 @@
     "tools": [
         "file_read"
     ],
+    "default_model": "openai/gpt-4o-mini",
     "agentstack_version": "0.2.2.2",
     "template": "none",
     "template_version": "0"
