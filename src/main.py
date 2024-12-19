@@ -30,7 +30,12 @@ def run():
     inputs = []
 
     for tweet in tweets:
-        inputs.append({"tweet": tweet, "user_interests": user_interests})
+        inputs.append(
+            {
+                "conversation_context": tweet.model_dump(),
+                "user_interests": user_interests,
+            }
+        )
 
     TweetproposerCrew().crew().kickoff_for_each(inputs=inputs)
 

@@ -7,8 +7,11 @@ filter_tweet:
     2. Exercise good taste, it's either a humororus, educational or thought provoking.
     3. Avoid generic thought leadership tweets that use the 🧵 emoji, listicles, or engagement bait.
     
-    User Interests:
+    ## User Interests:
     {user_interests}
+
+    ## Conversation Context:
+    {conversation_context}
   expected_output: >-
     Exactly the output given the FilterTweetOutput pydantic class.
   agent: >-
