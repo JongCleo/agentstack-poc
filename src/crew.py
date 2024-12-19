@@ -1,34 +1,65 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-import tools
+from pydantic import BaseModel
+from src.twitter.models import TwitterConversation
+
+
+class FilterTweetOutput(BaseModel):
+    """Response from the filterer agent"""
+
+    tweet: TwitterConversation
+    selection_reason: str
+
+
+class DraftResponseOutput(BaseModel):
+    """Response from the draft_responses agent"""
+
+    tweet: str
+    draft: str
+    url: str
+
 
 @CrewBase
-class TweetproposerCrew():
+class TweetproposerCrew:
     """tweet_proposer crew"""
 
     # Agent definitions
     @agent
-    def alex(self) -> Agent:
+    def filterer(self) -> Agent:
         return Agent(
-            config=self.agents_config['alex'],
-            tools=[tools.file_read_tool],  # Pass in what tools this agent should have
-            verbose=True
+            config=self.agents_config["filterer"],
+            allow_delegation=False,
+            verbose=True,
         )
 
-    # Task definitions
+    @agent
+    def responder(self) -> Agent:
+        return Agent(
+            config=self.agents_config["responder"],
+            allow_delegation=False,
+            verbose=True,
+        )
+
     @task
-    def hello_world(self) -> Task:
+    def filter_tweets(self) -> Task:
         return Task(
-            config=self.tasks_config['hello_world'],
+            config=self.tasks_config["filter_tweet"],
+            output_pydantic=FilterTweetOutput,
+        )
+
+    @task
+    def draft_responses(self) -> Task:
+        return Task(
+            config=self.tasks_config["draft_response"],
+            output_pydantic=DraftResponseOutput,
         )
 
     @crew
     def crew(self) -> Crew:
         """Creates the Test crew"""
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )

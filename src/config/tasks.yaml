@@ -1,7 +1,32 @@
 
-hello_world:
-  description: >
-    As is tradition in software, let's start by saying 'Hello, World!'. Then, pick one or two tasks that they should try to do next with AgentStack.
-  expected_output: >
-    The sentence Hello, World! followed by two things the user should try to customize their agent further.
-  agent: alex
+
+filter_tweet:
+  description: >-
+    Carefully read the entire conversation context and decide if it is relevant given the following rules:
+    1. Matches the user interests (specified below)
+    2. Exercise good taste, it's either a humororus, educational or thought provoking.
+    3. Avoid generic thought leadership tweets that use the 🧵 emoji, listicles, or engagement bait.
+    
+    User Interests:
+    {user_interests}
+  expected_output: >-
+    Exactly the output given the FilterTweetOutput pydantic class.
+  agent: >-
+    filterer
+
+draft_response:
+  description: >-
+    Draft a reply to the target tweet, carefully reading the conversation thread leading up to it.
+    The goal is to accrue social capital and followers.
+    ### Rules
+    - Always reply with a non corporate, non marketing, casual tone.
+    - Write succinctly
+    - Occassionaly use internet slang    
+    - Use wit, sarcasm and crude humor where appropriate
+    - Sometimes you want to try to be engaging and interesting
+    - Sometimes you want to write something intentionally polarizing or controversial to farm engagement
+    
+  expected_output: >-
+    Exactly the output given the DraftResponseOutput pydantic class.
+  agent: >-
+    responder
